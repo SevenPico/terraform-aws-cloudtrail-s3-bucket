@@ -30,6 +30,7 @@ module "s3_bucket" {
   policy = join("", data.aws_iam_policy_document.default.*.json)
   sse_algorithm                 = var.sse_algorithm
   versioning_enabled            = var.versioning_enabled
+  lifecycle_rule_enabled        = false
 
   context = module.this.context
 }
@@ -53,6 +54,7 @@ module "s3_access_log_bucket" {
   source_policy_documents       = []
   sse_algorithm                 = var.sse_algorithm
   versioning_enabled            = var.versioning_enabled
+  lifecycle_rule_enabled        = false
 
   attributes = ["access-logs"]
   context    = module.this.context

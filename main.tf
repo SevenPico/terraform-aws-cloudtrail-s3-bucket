@@ -109,6 +109,6 @@ data "aws_iam_policy_document" "default" {
 data "aws_partition" "current" {}
 
 locals {
-  access_log_bucket_name = var.create_access_log_bucket == true ? module.s3_access_log_bucket.bucket_id : var.access_log_bucket_name
+  access_log_bucket_name = var.create_access_log_bucket == true ? "${module.this.id}-access-logs" : var.access_log_bucket_name
   arn_format             = "arn:${data.aws_partition.current.partition}"
 }

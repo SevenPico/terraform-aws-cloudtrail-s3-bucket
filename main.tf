@@ -13,63 +13,46 @@ module "s3_bucket" {
   version = "0.28.0"
   enabled = module.this.enabled
 
-  acl                                    = var.acl
-  policy                                 = join("", data.aws_iam_policy_document.default.*.json)
-  force_destroy                          = var.force_destroy
-  versioning_enabled                     = var.versioning_enabled
-  lifecycle_rule_enabled                 = var.lifecycle_rule_enabled
-  lifecycle_prefix                       = var.lifecycle_prefix
-  lifecycle_tags                         = var.lifecycle_tags
-  noncurrent_version_expiration_days     = var.noncurrent_version_expiration_days
-  noncurrent_version_transition_days     = var.noncurrent_version_transition_days
-  standard_transition_days               = var.standard_transition_days
-  glacier_transition_days                = var.glacier_transition_days
-  enable_glacier_transition              = var.enable_glacier_transition
-  expiration_days                        = var.expiration_days
-  abort_incomplete_multipart_upload_days = var.abort_incomplete_multipart_upload_days
-  sse_algorithm                          = var.sse_algorithm
-  kms_master_key_arn                     = var.kms_master_key_arn
-  block_public_acls                      = var.block_public_acls
-  block_public_policy                    = var.block_public_policy
-  ignore_public_acls                     = var.ignore_public_acls
-  restrict_public_buckets                = var.restrict_public_buckets
-  access_log_bucket_name                 = local.access_log_bucket_name
-  access_log_bucket_prefix               = var.access_log_bucket_prefix
-  allow_ssl_requests_only                = var.allow_ssl_requests_only
-  bucket_notifications_enabled           = var.bucket_notifications_enabled
-  bucket_notifications_type              = var.bucket_notifications_type
-  bucket_notifications_prefix            = var.bucket_notifications_prefix
+  access_log_bucket_name        = local.access_log_bucket_name
+  acl                           = var.acl
+  allow_ssl_requests_only       = var.allow_ssl_requests_only
+  block_public_acls             = var.block_public_acls
+  block_public_policy           = var.block_public_policy
+  bucket_notifications_enabled  = var.bucket_notifications_enabled
+  bucket_notifications_prefix   = var.bucket_notifications_prefix
+  bucket_notifications_type     = var.bucket_notifications_type
+  force_destroy_enabled         = var.force_destroy
+  force_destroy                 = var.force_destroy
+  ignore_public_acls            = var.ignore_public_acls
+  kms_master_key_arn            = var.kms_master_key_arn
+  lifecycle_configuration_rules = var.lifecycle_configuration_rules
+  restrict_public_buckets       = var.restrict_public_buckets
+  source_policy_documents       = [join("", data.aws_iam_policy_document.default.*.json)]
+  sse_algorithm                 = var.sse_algorithm
+  versioning_enabled            = var.versioning_enabled
 
   context = module.this.context
 }
 
 module "s3_access_log_bucket" {
   source  = "cloudposse/s3-log-storage/aws"
-  version = "0.26.0"
+  version = "0.28.0"
   enabled = module.this.enabled && var.create_access_log_bucket
 
-  acl                                    = var.acl
-  policy                                 = ""
-  force_destroy                          = var.force_destroy
-  versioning_enabled                     = var.versioning_enabled
-  lifecycle_rule_enabled                 = var.lifecycle_rule_enabled
-  lifecycle_prefix                       = var.lifecycle_prefix
-  lifecycle_tags                         = var.lifecycle_tags
-  noncurrent_version_expiration_days     = var.noncurrent_version_expiration_days
-  noncurrent_version_transition_days     = var.noncurrent_version_transition_days
-  standard_transition_days               = var.standard_transition_days
-  glacier_transition_days                = var.glacier_transition_days
-  enable_glacier_transition              = var.enable_glacier_transition
-  expiration_days                        = var.expiration_days
-  abort_incomplete_multipart_upload_days = var.abort_incomplete_multipart_upload_days
-  sse_algorithm                          = var.sse_algorithm
-  kms_master_key_arn                     = var.kms_master_key_arn
-  block_public_acls                      = var.block_public_acls
-  block_public_policy                    = var.block_public_policy
-  ignore_public_acls                     = var.ignore_public_acls
-  restrict_public_buckets                = var.restrict_public_buckets
-  access_log_bucket_name                 = ""
-  allow_ssl_requests_only                = var.allow_ssl_requests_only
+  access_log_bucket_name        = ""
+  acl                           = var.acl
+  allow_ssl_requests_only       = var.allow_ssl_requests_only
+  block_public_acls             = var.block_public_acls
+  block_public_policy           = var.block_public_policy
+  force_destroy_enabled         = var.force_destroy
+  force_destroy                 = var.force_destroy
+  ignore_public_acls            = var.ignore_public_acls
+  kms_master_key_arn            = var.kms_master_key_arn
+  lifecycle_configuration_rules = var.lifecycle_configuration_rules
+  restrict_public_buckets       = var.restrict_public_buckets
+  source_policy_documents       = []
+  sse_algorithm                 = var.sse_algorithm
+  versioning_enabled            = var.versioning_enabled
 
   attributes = ["access-logs"]
   context    = module.this.context
@@ -77,7 +60,7 @@ module "s3_access_log_bucket" {
 
 data "aws_iam_policy_document" "default" {
   count       = module.this.enabled ? 1 : 0
-  source_json = var.policy == "" ? null : var.policy
+  source_policy_documents = compact([var.policy])
 
   statement {
     sid = "AWSCloudTrailAclCheck"

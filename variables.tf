@@ -10,71 +10,16 @@ variable "policy" {
   default     = ""
 }
 
-variable "lifecycle_prefix" {
-  type        = string
-  description = "Prefix filter. Used to manage object lifecycle events"
-  default     = ""
-}
-
-variable "lifecycle_tags" {
-  type        = map(string)
-  description = "Tags filter. Used to manage object lifecycle events"
-  default     = {}
-}
-
 variable "force_destroy" {
   type        = bool
   description = "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable"
   default     = false
 }
 
-variable "lifecycle_rule_enabled" {
-  type        = bool
-  description = "Enable lifecycle events on this bucket"
-  default     = true
-}
-
 variable "versioning_enabled" {
   type        = bool
   description = "A state of versioning. Versioning is a means of keeping multiple variants of an object in the same bucket"
   default     = false
-}
-
-variable "noncurrent_version_expiration_days" {
-  description = "Specifies when noncurrent object versions expire"
-  default     = 90
-}
-
-variable "noncurrent_version_transition_days" {
-  description = "Specifies when noncurrent object versions transitions"
-  default     = 30
-}
-
-variable "standard_transition_days" {
-  description = "Number of days to persist in the standard storage tier before moving to the infrequent access tier"
-  default     = 30
-}
-
-variable "glacier_transition_days" {
-  description = "Number of days after which to move the data to the glacier storage tier"
-  default     = 60
-}
-
-variable "enable_glacier_transition" {
-  type        = bool
-  default     = false
-  description = "Glacier transition might just increase your bill. Set to false to disable lifecycle transitions to AWS Glacier."
-}
-
-variable "expiration_days" {
-  description = "Number of days after which to expunge the objects"
-  default     = 90
-}
-
-variable "abort_incomplete_multipart_upload_days" {
-  type        = number
-  default     = 5
-  description = "Maximum time (in days) that you want to allow multipart uploads to remain in progress"
 }
 
 variable "sse_algorithm" {
@@ -119,12 +64,6 @@ variable "access_log_bucket_name" {
   description = "Name of the S3 bucket where s3 access log will be sent to"
 }
 
-variable "access_log_bucket_prefix" {
-  type        = string
-  default     = "logs/"
-  description = "Prefix to prepend to the current S3 bucket name, where S3 access logs will be sent to"
-}
-
 variable "create_access_log_bucket" {
   type        = bool
   default     = false
@@ -153,4 +92,9 @@ variable "bucket_notifications_prefix" {
   type        = string
   description = "Prefix filter. Used to manage object notifications"
   default     = ""
+}
+
+variable "lifecycle_configuration_rules" {
+  type = any
+  default = []
 }

@@ -27,7 +27,7 @@ module "s3_bucket" {
   kms_master_key_arn            = var.kms_master_key_arn
   lifecycle_configuration_rules = var.lifecycle_configuration_rules
   restrict_public_buckets       = var.restrict_public_buckets
-  source_policy_documents       = [join("", data.aws_iam_policy_document.default.*.json)]
+  policy = join("", data.aws_iam_policy_document.default.*.json)
   sse_algorithm                 = var.sse_algorithm
   versioning_enabled            = var.versioning_enabled
 
